@@ -1,1 +1,1 @@
-Añadir funcionalidad de CRUD
+Toruh Delgado Lahera
