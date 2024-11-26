@@ -57,7 +57,7 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `nombre`, `login`, `password`, `rol`) VALUES
 (1, 'Toruh', 'toruh', '123456789', 'admin'),
 (2, 'usuario', 'user', '123456789', 'user');
-
+(3, 'invitado', 'invitado', '123456789', 'invitado');
 --
 -- Índices para tablas volcadas
 --
