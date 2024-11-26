@@ -42,7 +42,7 @@ export const authActions = authSlice.actions
 export default authSlice.reducer*/
 
 
-//nuevo authslice para que funcione con la nueva CASA por la base de dato
+//&nuevo authslice para que funcione con la nueva CASA por la base de dato
 
 import { createSlice } from '@reduxjs/toolkit';
 

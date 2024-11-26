@@ -61,19 +61,20 @@ export default Home;
 */
 
 
-//codigo con la modificacion de comprobacion login2
-import React, { useEffect } from 'react';
-import { Typography, Container, Button, Card, CardContent } from '@mui/material'; // Importamos Box correctamente
+//&codigo con la modificacion de comprobacion login2
+
+/*import React, { useEffect } from 'react';
+//import { Typography, Container, Button, Card, CardContent } from '@mui/material'; // Importamos Box correctamente
 import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import { authActions } from '../store/authSlice';
+//import { useSelector,/*useDispatch*//* } from 'react-redux';
+//import { authActions } from '../store/authSlice';
 import Dashboard from '../components/Dashboard'; 
 import Menu from '../components/Menu'; // Importamos el menú como encabezado
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
 
   // Accedemos correctamente a `isAuthenticated` desde Redux
   const userData = useSelector((state: any) => state.authenticator);
@@ -86,18 +87,18 @@ const Home: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleLogout = () => {
+  {/*const handleLogout = () => {
     dispatch(authActions.logout());
     navigate('/');
-  };
+  };*//*}
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* Aquí pasamos `nombreUsuario` como prop */}
-      <Menu nombreUsuario={userData?.nombreUsuario} />  {/* Usamos el Menu como encabezado */}
+      {/* Aquí pasamos `nombreUsuario` como prop *//*}
+      <Menu nombreUsuario={userData?.nombreUsuario} />  {/* Usamos el Menu como encabezado *//*}
 
-      {/* Cuerpo de la página */}
-      <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+      {/* Cuerpo de la página *//*}
+     {/* <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
         <Card sx={{ width: '100%', maxWidth: 600, borderRadius: 3, boxShadow: 3 }}>
           <CardContent>
             <Box sx={{ mb: 2 }}>
@@ -127,9 +128,57 @@ const Home: React.FC = () => {
             </Button>
           </CardContent>
         </Card>
-      </Container>
+      </Container>*//*}
 
-      {/* Renderiza el componente Dashboard debajo del card */}
+      {/* Renderiza el componente Dashboard debajo del card *//*}
+    /*  <Dashboard /> {/* Este es el componente Dashboard con el formulario y la tabla *//*}
+   /* </Box>
+  );
+};
+
+export default Home;*/
+
+
+
+//&home de verificacion de roll
+import React, { useEffect } from 'react';
+//import { Typography, Container, Card, CardContent } from '@mui/material'; // Importamos Box correctamente
+import { useNavigate } from 'react-router-dom';
+import { Box } from '@mui/material';
+import { useSelector, /*useDispatch*/ } from 'react-redux';
+//import { authActions } from '../store/authSlice';
+import Dashboard from '../components/Dashboard'; 
+import Menu from '../components/Menu'; // Importamos el menú como encabezado
+
+const Home: React.FC = () => {
+  const navigate = useNavigate();
+  //const dispatch = useDispatch();
+
+  // Accedemos correctamente a isAuthenticated desde Redux
+  const userData = useSelector((state: any) => state.authenticator);
+  const isAuthenticated = userData?.isAuthenticated;
+
+  // Redirigir al login si el usuario no está autenticado
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Comentar este código para evitar el warning si no se usa
+  /*
+  const handleLogout = () => {
+    dispatch(authActions.logout());
+    navigate('/');
+  };
+  */
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      {/* Aquí pasamos nombreUsuario como prop */}
+      <Menu nombreUsuario={userData?.nombreUsuario} />  {/* Usamos el Menu como encabezado */}
+
+      {/* Renderiza el componente Dashboard directamente */}
       <Dashboard /> {/* Este es el componente Dashboard con el formulario y la tabla */}
     </Box>
   );
