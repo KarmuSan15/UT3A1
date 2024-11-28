@@ -68,6 +68,7 @@ export default Reports;*/
 
 //&Nuevo Reporte para rol
 
+/*
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Container, Button, Paper, CircularProgress, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -118,10 +119,10 @@ const Reports: React.FC = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* Aquí pasamos `nombreUsuario` como prop */}
+      {/* Aquí pasamos `nombreUsuario` como prop *//*}
       <Menu nombreUsuario={userData?.nombreUsuario} />
 
-      {/* Cuerpo de la página de Reportes */}
+      {/* Cuerpo de la página de Reportes *//*}
       <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: 3 }}>
         <Typography variant="h3" color="primary" align="center" gutterBottom>
           Página de Reportes
@@ -130,7 +131,7 @@ const Reports: React.FC = () => {
           Aquí puedes generar informes detallados de la colección. Haz clic en el botón de abajo para generar el informe de la colección.
         </Typography>
 
-        {/* Mostrar el botón solo si no hay informe generado aún */}
+        {/* Mostrar el botón solo si no hay informe generado aún *//*}
         {!isReportGenerated && !loading && (
           <Button
             variant="contained"
@@ -153,24 +154,128 @@ const Reports: React.FC = () => {
           </Button>
         )}
 
-        {/* Mostrar un indicador de carga mientras los datos se obtienen */}
+        {/* Mostrar un indicador de carga mientras los datos se obtienen *//*}
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
             <CircularProgress />
           </Box>
         )}
 
-        {/* Mostrar el mensaje de error si la carga falla */}
+        {/* Mostrar el mensaje de error si la carga falla *//*}
         {error && (
           <Alert severity="error" sx={{ mt: 2 }}>
             {error}
           </Alert>
         )}
 
-        {/* Renderizar el informe si la variable de control está en true */}
+        {/* Renderizar el informe si la variable de control está en true *//*}
         {isReportGenerated && !loading && (
           <Paper sx={{ mt: 4, padding: 3, boxShadow: 3 }}>
-            {/* Eliminamos el mensaje "Informe Generado" */}
+            {/* Eliminamos el mensaje "Informe Generado" *//*}
+            <InformeColeccion data={data} />
+          </Paper>
+        )}
+      </Container>
+    </Box>
+  );
+};
+
+export default Reports;*/
+
+//& REPORTE TOOLTIP
+
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Container, Button, Paper, CircularProgress, Alert, Tooltip } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import Menu from '../components/Menu';
+import InformeColeccion from '../components/InformeColeccion';
+
+const Reports: React.FC = () => {
+  const navigate = useNavigate();
+  const [isReportGenerated, setIsReportGenerated] = useState(false);
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const userData = useSelector((state: any) => state.authenticator);
+  const isAuthenticated = userData?.isAuthenticated;
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
+  const fetchReportData = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch('http://localhost:3030/getItems');
+      const data = await response.json();
+
+      if (response.ok) {
+        setData(data.data);
+        setIsReportGenerated(true);
+      } else {
+        throw new Error('Error al obtener los datos del informe');
+      }
+    } catch {
+      setError('Hubo un problema al cargar los datos. Inténtalo nuevamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <Menu nombreUsuario={userData?.nombreUsuario} />
+
+      <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: 3 }}>
+        <Typography variant="h3" color="primary" align="center" gutterBottom>
+          Página de Reportes
+        </Typography>
+        <Typography variant="body1" color="text.secondary" align="center" paragraph>
+          Aquí puedes generar informes detallados de la colección. Haz clic en el botón de abajo para generar el informe de la colección.
+        </Typography>
+
+        {!isReportGenerated && !loading && (
+          <Tooltip title="Haz clic para generar el informe de la colección" arrow placement="top">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={fetchReportData}
+              sx={{
+                mt: 3,
+                padding: '12px 24px',
+                borderRadius: '20px',
+                fontSize: '16px',
+                width: '50%',
+                alignSelf: 'center',
+                boxShadow: 3,
+                '&:hover': {
+                  backgroundColor: '#1976d2',
+                },
+              }}
+            >
+              GENERAR INFORME COLECCIÓN
+            </Button>
+          </Tooltip>
+        )}
+
+        {loading && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+            <CircularProgress />
+          </Box>
+        )}
+
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {isReportGenerated && !loading && (
+          <Paper sx={{ mt: 4, padding: 3, boxShadow: 3 }}>
             <InformeColeccion data={data} />
           </Paper>
         )}
@@ -180,3 +285,4 @@ const Reports: React.FC = () => {
 };
 
 export default Reports;
+
