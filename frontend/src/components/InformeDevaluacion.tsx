@@ -1,41 +1,41 @@
+//& Informe devaluacion examen recuperacion ut3
+
 import React from "react";
 import MaterialTable, { Column } from "@material-table/core";
 import { ExportCsv, ExportPdf } from "@material-table/exporters";
 
-interface IUser {
-  nombre: string;
-  rol: string;
-  password: string;
-  login: string;
+interface IDevaluation {
+  articulo: string;
+  meses: number;
+  devaluacion: number;
 }
 
-const InformeUsuarios: React.FC<{ data: IUser[] }> = ({ data }) => {
-  const columns: Array<Column<IUser>> = [
-    { title: "Nombre", field: "nombre", filterPlaceholder: "Buscar nombre..." }, // Filtro activado para Nombre
-    { title: "Rol", field: "rol", filtering: false }, // Deshabilitar filtro en Rol
-    { title: "Password", field: "password", filtering: false }, // Deshabilitar filtro en Password
-    { title: "Login", field: "login", filtering: false }, // Deshabilitar filtro en Login
+const InformeDevaluacion: React.FC<{ data: IDevaluation[] }> = ({ data }) => {
+  const columns: Array<Column<IDevaluation>> = [
+    { title: "Artículo", field: "articulo", filterPlaceholder: "Buscar artículo..." }, // Filtro activado en Artículo
+    { title: "Meses", field: "meses", type: "numeric", filtering: false }, // Deshabilitar filtro en Meses
+    { title: "Devaluación (%)", field: "devaluacion", type: "numeric", filtering: false }, // Deshabilitar filtro en Devaluación
   ];
 
   return (
     <div style={{ maxWidth: "100%", marginTop: "20px" }}>
       <MaterialTable
-        title="Informe de Usuarios"
+        title="Informe de Devaluación"
         columns={columns}
         data={data}
         options={{
-          filtering: true, // Activamos el filtrado solo en Nombre
+          filtering: true, // Activamos el filtrado en Artículo
           columnsButton: true,
           draggable: true,
           paging: true,
           exportMenu: [
             {
               label: "Exportar a PDF",
-              exportFunc: (cols, rows) => ExportPdf(cols, rows, "Informe_Usuarios"),
+              exportFunc: (cols, rows) => ExportPdf(cols, rows, "Informe_Devaluacion"),
             },
             {
               label: "Exportar a CSV",
-              exportFunc: (cols, rows) => ExportCsv(cols, rows, "Informe_Usuarios"),
+              exportFunc: (cols, rows) => ExportCsv(cols, rows, "Informe_Devaluacion"),
             },
           ],
           headerStyle: {
@@ -56,7 +56,7 @@ const InformeUsuarios: React.FC<{ data: IUser[] }> = ({ data }) => {
         }}
         localization={{
           toolbar: {
-            searchPlaceholder: "Buscar usuario...",
+            searchPlaceholder: "Buscar artículo...",
             exportTitle: "Exportar",
           },
           pagination: {
@@ -75,4 +75,4 @@ const InformeUsuarios: React.FC<{ data: IUser[] }> = ({ data }) => {
   );
 };
 
-export default InformeUsuarios;
+export default InformeDevaluacion;

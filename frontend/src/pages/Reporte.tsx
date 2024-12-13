@@ -287,6 +287,7 @@ const Reports: React.FC = () => {
 export default Reports;*/
 
 //& REPORTE EXAMEN UT3
+/*
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Container, Button, Paper, CircularProgress, Alert, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -384,7 +385,7 @@ const Reports: React.FC = () => {
           Aquí puedes generar informes detallados de la colección y de los usuarios. Haz clic en los botones de abajo para generar los informes.
         </Typography>
 
-        {/* Botones para generar informes */}
+        {/* Botones para generar informes *//*}
         {!loading && (
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, mt: 3 }}>
             <Tooltip title="Haz clic para generar el informe de la colección" arrow placement="top">
@@ -429,6 +430,245 @@ const Reports: React.FC = () => {
           </Box>
         )}
 
+        {/* Estado de carga *//*}
+        {loading && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+            <CircularProgress />
+          </Box>
+        )}
+
+        {/* Mensaje de error *//*}
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {/* Informe de la colección *//*}
+        {isCollectionReportVisible && !loading && (
+          <Paper sx={{ mt: 4, padding: 3, boxShadow: 3 }}>
+            <Typography variant="h6" color="primary" gutterBottom>
+              Informe de la Colección
+            </Typography>
+            {/* Aquí se muestra el componente InformeColeccion *//*}
+            <InformeColeccion data={data} />
+          </Paper>
+        )}
+
+        {/* Informe de usuarios *//*}
+        {isUserReportVisible && !loading && (
+          <Paper sx={{ mt: 4, padding: 3, boxShadow: 3 }}>
+            <Typography variant="h6" color="secondary" gutterBottom>
+              Informe de Usuarios
+            </Typography>
+            {/* Mostrar el Informe de Usuarios *//*}
+            <InformeUsuarios data={userData} /> {/* Aquí se pasa el estado con los datos de los usuarios *//*}
+          </Paper>
+        )}
+      </Container>
+    </Box>
+  );
+};
+
+export default Reports;*/
+
+
+//& REPORTE EXAMEN UT3 RECUPERACION 
+
+import React, { useState, useEffect } from "react";
+import { Box, Typography, Container, Button, Paper, CircularProgress, Alert, Tooltip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Menu from "../components/Menu";
+import InformeUsuarios from "../components/informeUsuarios";
+import InformeColeccion from "../components/InformeColeccion";
+import InformeDevaluacion from "../components/InformeDevaluacion"; // Nuevo componente para el informe de devaluación
+
+const Reports: React.FC = () => {
+  const navigate = useNavigate();
+  const [isReportGenerated, setIsReportGenerated] = useState(false);
+  const [data, setData] = useState<any[]>([]); // Datos de la colección
+  const [userData, setUserData] = useState<any[]>([]); // Datos de los usuarios
+  const [devaluationData, setDevaluationData] = useState<any[]>([]); // Datos de devaluación
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [isUserReportVisible, setIsUserReportVisible] = useState(false);
+  const [isCollectionReportVisible, setIsCollectionReportVisible] = useState(false);
+  const [isDevaluationReportVisible, setIsDevaluationReportVisible] = useState(false); // Estado para el informe de devaluación
+  const userDataAuth = useSelector((state: any) => state.authenticator);
+  const isAuthenticated = userDataAuth?.isAuthenticated;
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/"); // Si no está autenticado, redirigir a la página de login
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Función para manejar la visibilidad del informe de usuarios
+  const handleToggleUserReport = () => {
+    setIsUserReportVisible((prevState) => !prevState);
+    if (!isUserReportVisible) {
+      fetchUserReportData();
+    }
+  };
+
+  // Función para manejar la visibilidad del informe de la colección
+  const handleToggleCollectionReport = () => {
+    setIsCollectionReportVisible((prevState) => !prevState);
+    if (!isCollectionReportVisible) {
+      fetchReportData();
+    }
+  };
+
+  // Función para manejar la visibilidad del informe de devaluación
+  const handleToggleDevaluationReport = () => {
+    setIsDevaluationReportVisible((prevState) => !prevState);
+    if (!isDevaluationReportVisible) {
+      fetchDevaluationReportData();
+    }
+  };
+
+  // Función para obtener el informe de la colección
+  const fetchReportData = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch("http://localhost:3030/getItems");
+      const data = await response.json();
+
+      if (response.ok) {
+        setData(data.data);
+        setIsReportGenerated(true);
+        setIsCollectionReportVisible(true);
+      } else {
+        throw new Error("Error al obtener los datos del informe");
+      }
+    } catch {
+      setError("Hubo un problema al cargar los datos. Inténtalo nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para obtener los datos de los usuarios
+  const fetchUserReportData = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch("http://localhost:3030/getUsers");
+      const data = await response.json();
+
+      if (response.ok) {
+        setUserData(data.data);
+        setIsUserReportVisible(true);
+      } else {
+        throw new Error("Error al obtener los datos del informe de usuarios");
+      }
+    } catch (error) {
+      setError("Hubo un problema al cargar los datos de los usuarios. Inténtalo nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para obtener los datos de devaluación
+  const fetchDevaluationReportData = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch("http://localhost:3030/getDevaluacion"); // Endpoint para obtener la devaluación
+      const data = await response.json();
+
+      if (response.ok) {
+        setDevaluationData(data.data);
+        setIsDevaluationReportVisible(true);
+      } else {
+        throw new Error("Error al obtener los datos del informe de devaluación");
+      }
+    } catch (error) {
+      setError("Hubo un problema al cargar los datos de la devaluación. Inténtalo nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <Menu nombreUsuario={userDataAuth?.nombreUsuario} />
+
+      <Container sx={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: 3 }}>
+        <Typography variant="h3" color="primary" align="center" gutterBottom>
+          Página de Reportes
+        </Typography>
+        <Typography variant="body1" color="text.secondary" align="center" paragraph>
+          Aquí puedes generar informes detallados de la colección, de los usuarios y de la devaluación.
+        </Typography>
+
+        {/* Botones para generar informes */}
+        {!loading && (
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, mt: 3 }}>
+            <Tooltip title="Haz clic para generar el informe de la colección" arrow placement="top">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleToggleCollectionReport}
+                sx={{
+                  padding: "12px 24px",
+                  borderRadius: "20px",
+                  fontSize: "16px",
+                  width: "50%",
+                  boxShadow: 3,
+                  "&:hover": {
+                    backgroundColor: "#1976d2",
+                  },
+                }}
+              >
+                GENERAR INFORME COLECCIÓN
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="Haz clic para generar el informe de los usuarios" arrow placement="top">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleToggleUserReport}
+                sx={{
+                  padding: "12px 24px",
+                  borderRadius: "20px",
+                  fontSize: "16px",
+                  width: "50%",
+                  boxShadow: 3,
+                  "&:hover": {
+                    backgroundColor: "#d32f2f",
+                  },
+                }}
+              >
+                GENERAR INFORME USUARIOS
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="Haz clic para generar el informe de devaluación" arrow placement="top">
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleToggleDevaluationReport}
+                sx={{
+                  padding: "12px 24px",
+                  borderRadius: "20px",
+                  fontSize: "16px",
+                  width: "50%",
+                  boxShadow: 3,
+                  "&:hover": {
+                    backgroundColor: "#388e3c",
+                  },
+                }}
+              >
+                GENERAR INFORME DESVALUACIÓN
+              </Button>
+            </Tooltip>
+          </Box>
+        )}
+
         {/* Estado de carga */}
         {loading && (
           <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
@@ -449,7 +689,6 @@ const Reports: React.FC = () => {
             <Typography variant="h6" color="primary" gutterBottom>
               Informe de la Colección
             </Typography>
-            {/* Aquí se muestra el componente InformeColeccion */}
             <InformeColeccion data={data} />
           </Paper>
         )}
@@ -460,8 +699,17 @@ const Reports: React.FC = () => {
             <Typography variant="h6" color="secondary" gutterBottom>
               Informe de Usuarios
             </Typography>
-            {/* Mostrar el Informe de Usuarios */}
-            <InformeUsuarios data={userData} /> {/* Aquí se pasa el estado con los datos de los usuarios */}
+            <InformeUsuarios data={userData} />
+          </Paper>
+        )}
+
+        {/* Informe de devaluación */}
+        {isDevaluationReportVisible && !loading && (
+          <Paper sx={{ mt: 4, padding: 3, boxShadow: 3 }}>
+            <Typography variant="h6" color="success.main" gutterBottom>
+              Informe de Devaluación
+            </Typography>
+            <InformeDevaluacion data={devaluationData} />
           </Paper>
         )}
       </Container>
@@ -470,3 +718,4 @@ const Reports: React.FC = () => {
 };
 
 export default Reports;
+
